@@ -54,6 +54,24 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 function clearText() {
-  var textForm = document.getElementById("form");
+  var textForm = document.getElementById("form1");
+  textForm.value = '';
+  var textForm = document.getElementById("form2");
   textForm.value = '';
 }
+
+
+function switchInput() {
+  const container = document.getElementById("input-container");
+  if (window.matchMedia("(max-width: 750px)").matches) {
+    container.innerHTML = '<textarea id="form2" class="title_text" ></textarea>';
+  } else {
+    container.innerHTML = '<input type="text" class="title_text" id="form1">';
+  }
+}
+
+// 初回適用
+switchInput();
+
+// 画面サイズ変更時にも適用
+window.addEventListener("resize", switchInput);
