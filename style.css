@@ -1,0 +1,128 @@
+body {
+  height:100%;
+  background-color: rgb(255, 252, 210);
+}
+
+#title-container {
+  min-height: 60px; /* タイトルの表示領域を確保 */
+  align-items: center;
+  justify-content: center;
+  background-color: rgb(255, 252, 210);
+  width: 100%;
+  max-width: 2000px;
+  margin-bottom: 10px;
+  border: solid 1px;
+  border-color: rgb(238, 199, 70);
+}
+#form {
+  display: inline-block;
+  width: 100%;
+  max-width: 2000px;
+  padding: 0.5em;
+  border: 1px solid #000000;
+  box-sizing: border-box;
+  background: #ffffff;
+  margin: 0.5em 0;
+}
+.title_text {
+  font-size: 150%;
+}
+#title {
+  padding: 11px;
+}
+
+/*サムネイル*/
+#thumbnail {
+  width: 100%;
+  max-width: 2000px;
+  margin-top: 20px;
+}
+
+/*ナビ*/
+#menu-icon {
+  font-size: 30px;
+  cursor: pointer;
+  position: fixed;
+  border: 0;
+  top: 55px;
+  right: 30px;
+  z-index: 1001; /* メニューより上に配置 */
+  background: none;
+}
+/* ナビゲーションメニュー（最初は非表示で右に隠す） */
+#nav-menu {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 250px;
+  height: 100vh; /* 画面いっぱい */
+  background: rgb(255, 255, 255);
+  transform: translateX(100%);
+  transition: transform 0.3s ease-in-out;
+  z-index: 1000; /* コンテンツより上に配置 */
+}
+/* ナビメニュー表示時 */
+#nav-menu.active {
+  transform: translateX(0);
+}
+/* ナビゲーションのリスト */
+#nav-menu ul {
+  list-style: none;
+  padding: 50px 20px;
+  margin: 0;
+}
+
+#nav-menu li {
+  padding: 15px;
+  color: rgb(0, 0, 0);
+  cursor: pointer;
+}
+
+#nav-menu li:hover {
+  background: rgba(209, 209, 209, 0.2);
+}
+
+main{
+  background-color: rgb(255, 255, 255);
+  padding: 60px 100px 70px 100px ;
+  width: 80%;
+  margin: auto;
+}
+
+button{
+  background-color: rgb(196, 196, 196);
+  color: black;
+  font-size: 150%;
+}
+
+.container {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  grid-template-columns: 100%;
+  min-height: 100vh;
+}
+footer{
+  height:70px;
+  background-color:  rgb(238, 199, 70);
+  width: 100%;
+  
+  bottom:0;}
+
+#header{
+  color: #ffffff;
+  background-color: rgb(238, 199, 70);
+  padding: 30px;
+ }
+
+h2{
+  color:  rgb(238, 199, 70); 
+  margin: 40px 0px 10px 0px ;
+}
+h2:before {
+  content: "■";
+  }
+
+.content{
+  font-size: 25px;
+  padding-bottom: 30px;
+}
