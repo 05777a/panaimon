@@ -76,23 +76,23 @@ function historyText() {
 
   // `form1` または `form2` にテキストがある場合は追加
   if (form1 && form1.value.trim() !== '') {
-    newHistoryText += `回答: ${form1.value}\n`;
+    newHistoryText += `回答: ${form1.value}<br>`;
   }
   if (form2 && form2.value.trim() !== '') {
-    newHistoryText += `回答: ${form2.value}\n`;
+    newHistoryText += `回答: ${form2.value}<br>`;
   }
 
-   // `currentVideo` にタイトルがある場合は追加
-   if (currentVideo && currentVideo.title) {
-    newHistoryText += `正解: ${currentVideo.title}\n`;
+  // `currentVideo` にタイトルがある場合は追加
+  if (currentVideo && currentVideo.title) {
+    newHistoryText += `正解: <a href="https://www.youtube.com/watch?v=${currentVideo.videoId}" target="_blank">${currentVideo.title}</a><br>`;
   }
-
 
   // `#history` にテキストを追加
   if (newHistoryText) {
-    history.innerText += newHistoryText + '\n'; // 改行を追加して履歴を蓄積
+    history.innerHTML += newHistoryText + '<br>'; // innerHTML を使い `<br>` で改行
   }
 }
+
 
 // 入力フォームを切り替える関数
 function switchInput() {
