@@ -33,9 +33,13 @@ body {
 
 /*サムネイル*/
 #thumbnail {
-  width: 100%;
-  max-width: 2000px;
-  margin-top: 20px;
+  
+    width: 100%;
+    height: auto;
+    max-height: 60vh; /* 画面の高さの60% */
+    object-fit: contain; /* アスペクト比を保ったまま収める */
+  
+  
 }
 
 /*ナビ*/
