@@ -15,7 +15,18 @@ body {
   border: solid 1px;
   border-color: rgb(238, 199, 70);
 }
-#form {
+
+#form1 {
+  display: inline-block;
+  width: 100%;
+  max-width: 2000px;
+  padding: 0.5em;
+  border: 1px solid #000000;
+  box-sizing: border-box;
+  background: #ffffff;
+  margin: 0.5em 0;}
+
+#form2 {
   height: 2em; 
   font-size: 24px;
   display: inline-block;
@@ -27,6 +38,7 @@ body {
   box-sizing: border-box;
   background: #ffffff;
   margin: 0.5em 0;
+  
 }
 .title_text {
   font-size: 150%;
