@@ -33,11 +33,12 @@ body {
 
 /*サムネイル*/
 #thumbnail {
-   object-position: left;
-    width: 100%;
-    height: auto;
-    max-height: 60vh; /* 画面の高さの60% */
-    object-fit: contain; /* アスペクト比を保ったまま収める */
+ padding-top: 20px;
+object-position: left;
+width: 100%;
+height: auto;
+max-height: 60vh; /* 画面の高さの60% */
+object-fit: contain; /* アスペクト比を保ったまま収める */
   
   
 }
