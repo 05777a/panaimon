@@ -9,6 +9,10 @@ let currentVideo = null; // 現在表示されている動画データを保持
 
 // ボタンAを押すとランダムでサムネイル表示
 document.getElementById("buttonA").addEventListener("click", () => {
+
+  // `historyText()` で履歴を更新
+  historyText();
+
   // ランダムに動画を選択
   currentVideo = videos[Math.floor(Math.random() * videos.length)];
 
@@ -21,7 +25,10 @@ document.getElementById("buttonA").addEventListener("click", () => {
   // タイトルの領域は確保したまま、表示を非表示にする
   document.getElementById("title").style.visibility = "hidden";
 
-  clearText()
+  
+
+  // フォームをクリア
+  clearText();
 });
 
 // ボタンBを押すと現在表示されているサムネイルのタイトルを表示
@@ -33,14 +40,6 @@ document.getElementById("buttonB").addEventListener("click", () => {
   } else {
     alert("サムネイルが表示されていません");
   }
-});
-document.addEventListener("DOMContentLoaded", function () {
-  const toggleButton = document.querySelector(".nav-toggle");
-  const navMenu = document.querySelector(".nav-menu");
-
-  toggleButton.addEventListener("click", function () {
-    navMenu.classList.toggle("active");
-  });
 });
 
 //ナビ
@@ -54,17 +53,52 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 function clearText() {
-  var textForm = document.getElementById("form1");
-  textForm.value = '';
-  var textForm = document.getElementById("form2");
+  var textForm = document.getElementById("form");
   textForm.value = '';
 }
 
+// フォームをクリアする関数
+function clearText() {
+  const form1 = document.getElementById("form1");
+  const form2 = document.getElementById("form2");
 
+  if (form1) form1.value = '';
+  if (form2) form2.value = '';
+}
+
+// 履歴を追加する関数
+function historyText() {
+  const history = document.getElementById("history");
+  const form1 = document.getElementById("form1");
+  const form2 = document.getElementById("form2");
+
+  let newHistoryText = '';
+
+  // `form1` または `form2` にテキストがある場合は追加
+  if (form1 && form1.value.trim() !== '') {
+    newHistoryText += `回答: ${form1.value}\n`;
+  }
+  if (form2 && form2.value.trim() !== '') {
+    newHistoryText += `回答: ${form2.value}\n`;
+  }
+
+   // `currentVideo` にタイトルがある場合は追加
+   if (currentVideo && currentVideo.title) {
+    newHistoryText += `正解: ${currentVideo.title}\n`;
+  }
+
+
+  // `#history` にテキストを追加
+  if (newHistoryText) {
+    history.innerText += newHistoryText + '\n'; // 改行を追加して履歴を蓄積
+  }
+}
+
+// 入力フォームを切り替える関数
 function switchInput() {
   const container = document.getElementById("input-container");
   if (window.matchMedia("(max-width: 1300px)").matches) {
-    container.innerHTML = '<textarea id="form2" class="title_text" ></textarea>';
+    container.innerHTML = '<textarea id="form2" class="title_text"></textarea>';
   } else {
     container.innerHTML = '<input type="text" class="title_text" id="form1">';
   }
