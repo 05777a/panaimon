@@ -11,7 +11,7 @@ let currentVideo = null; // 現在表示されている動画データを保持
 document.getElementById("buttonA").addEventListener("click", () => {
 
   // `historyText()` で履歴を更新
-  historyText();
+  //historyText();
 
   // ランダムに動画を選択
   currentVideo = videos[Math.floor(Math.random() * videos.length)];
@@ -33,6 +33,7 @@ document.getElementById("buttonA").addEventListener("click", () => {
 
 // ボタンBを押すと現在表示されているサムネイルのタイトルを表示
 document.getElementById("buttonB").addEventListener("click", () => {
+  historyText()
   if (currentVideo) {
     // タイトルを表示
     document.getElementById("title").innerText = `${currentVideo.title}`;
