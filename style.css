@@ -33,7 +33,7 @@ body {
 
 /*サムネイル*/
 #thumbnail {
-  
+   object-position: left;
     width: 100%;
     height: auto;
     max-height: 60vh; /* 画面の高さの60% */
