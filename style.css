@@ -10,14 +10,18 @@ body {
   background-color: rgb(255, 252, 210);
   width: 100%;
   max-width: 2000px;
+  max-height: 80%;
   margin-bottom: 10px;
   border: solid 1px;
   border-color: rgb(238, 199, 70);
 }
 #form {
+  height: 2em; 
+  font-size: 24px;
   display: inline-block;
   width: 100%;
   max-width: 2000px;
+  height: 200%;
   padding: 0.5em;
   border: 1px solid #000000;
   box-sizing: border-box;
@@ -33,13 +37,12 @@ body {
 
 /*サムネイル*/
 #thumbnail {
- padding-top: 20px;
-object-position: left;
-width: 100%;
-height: auto;
-max-height: 60vh; /* 画面の高さの60% */
-object-fit: contain; /* アスペクト比を保ったまま収める */
-  
+    padding-top: 20px;
+    width: 100%;
+    height: auto;
+    max-height: 60vh; /* 画面の高さの60% */
+    object-fit: contain; /* アスペクト比を保ったまま収める */
+    object-position: left;
   
 }
 
@@ -89,9 +92,12 @@ object-fit: contain; /* アスペクト比を保ったまま収める */
 
 main{
   background-color: rgb(255, 255, 255);
-  padding: 60px 100px 70px 100px ;
-  width: 80%;
+  padding: 30px 30px 50px 30px ;
+
   margin: auto;
+}
+.inner{
+  width: 100%;
 }
 
 button{
@@ -118,6 +124,10 @@ footer{
   background-color: rgb(238, 199, 70);
   padding: 30px;
  }
+
+h1{
+  margin: 0px 0px 30px 0px ;
+}
 
 h2{
   color:  rgb(238, 199, 70); 
