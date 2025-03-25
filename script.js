@@ -63,7 +63,7 @@ function clearText() {
 
 function switchInput() {
   const container = document.getElementById("input-container");
-  if (window.matchMedia("(max-width: 750px)").matches) {
+  if (window.matchMedia("(max-width: 1300px)").matches) {
     container.innerHTML = '<textarea id="form2" class="title_text" ></textarea>';
   } else {
     container.innerHTML = '<input type="text" class="title_text" id="form1">';
