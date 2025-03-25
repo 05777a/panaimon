@@ -161,3 +161,7 @@ h2:before {
 #history{
   font-size: 16px;
 }
+
+a{
+  text-decoration: none;
+}
