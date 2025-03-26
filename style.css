@@ -1,7 +1,27 @@
 body {
   height:100%;
   background-color: rgb(255, 252, 210);
+  font-family: "BIZ UDPGothic", 'Meiryo', 'Hiragino Kaku Gothic ProN', 'ヒラギノ角ゴ ProN W3', sans-serif ;
 }
+
+header{
+  background-color: rgb(238, 199, 70);
+}
+input, textarea {
+  font-family:  "BIZ UDPGothic", 'Meiryo', 'Hiragino Kaku Gothic ProN', 'ヒラギノ角ゴ ProN W3', sans-serif ;
+}
+
+
+
+.header_img{
+ height: 12vh;
+ color: #ffffff;
+ background-color: rgb(238, 199, 70);
+ padding: 30px 10px 10px 30px ;
+ 
+ /* font-size: 25px; */
+}
+
 
 #title-container {
   min-height: 60px; /* タイトルの表示領域を確保 */
@@ -134,16 +154,7 @@ footer{
   
   bottom:0;}
 
-#header{
-  color: #ffffff;
-  background-color: rgb(238, 199, 70);
-  padding: 30px;
- }
 
-#header{
-  margin: 0px 0px 30px 0px ;
-    /* font-size: 25px; */
-}
 
 h2{
   color:  rgb(238, 199, 70); 
@@ -167,4 +178,29 @@ h2:before {
 
 a{
   text-decoration: none;
+}
+
+#result2{
+  font-size: 30px;
+  color: red;
+}
+
+#rate{
+  padding-top: 20px;
+}
+
+#tweetButton {
+  font-weight: bold;
+  padding: .8em 1.6em;
+  margin: 0.4em;
+  background-color: #00acee;
+  color: #fff;
+  text-decoration: none;
+  border-style: none;
+  border-radius: 5px;
+}
+#tweetButton:hover {
+  opacity: 0.6;
+  transition: 1.0s ;
+  color: #fff;
 }
