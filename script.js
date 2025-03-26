@@ -24,16 +24,16 @@ document.getElementById("buttonA").addEventListener("click", () => {
 
   // タイトルの領域は確保したまま、表示を非表示にする
   document.getElementById("title").style.visibility = "hidden";
-
-  
-
   // フォームをクリア
   clearText();
 });
 
 // ボタンBを押すと現在表示されているサムネイルのタイトルを表示
 document.getElementById("buttonB").addEventListener("click", () => {
+  
+  count_up()
   historyText()
+
   if (currentVideo) {
     // タイトルを表示
     document.getElementById("title").innerText = `${currentVideo.title}`;
@@ -52,6 +52,15 @@ document.addEventListener("DOMContentLoaded", function () {
     navMenu.classList.toggle("active");
   });
 });
+
+//ツイート
+document.getElementById("tweetButton").addEventListener("click", function () {
+  const tweetText = `サムネだけ見てタイトル当て選手権\n${count}問中${count_result}問正解しました！(正答率:${Math.round(count_result/count*100)}%)\nhttps://05777a.github.io/panaimon/index.html`;
+  const tweetUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}`;
+  
+  window.open(tweetUrl, "_blank");
+});
+
 
 function clearText() {
   var textForm = document.getElementById("form");
@@ -94,6 +103,28 @@ function historyText() {
   }
 }
 
+//カウントする
+let count = 0;
+let count_result = 0;
+
+function count_up() {
+  if(currentVideo){
+  count++; // countを1増やす
+  }
+  const form1 = document.getElementById("form1");
+  const form2 = document.getElementById("form2");
+
+  // currentVideoが存在し、タイトルがform1またはform2の入力と一致する場合
+  if (currentVideo && currentVideo.title) {
+    if ((form1 && form1.value.trim() === currentVideo.title) || 
+        (form2 && form2.value.trim() === currentVideo.title)) {
+      count_result++; // count_resultを1増やす
+    }
+  }
+  result1.innerHTML = count+ "問中"  ;
+  result2.innerHTML = count_result + "問正解！"
+  rate.innerHTML = "正答率："+Math.round( count_result/count*100) + "%"
+}
 
 // 入力フォームを切り替える関数
 function switchInput() {
@@ -110,3 +141,5 @@ switchInput();
 
 // 画面サイズ変更時にも適用
 window.addEventListener("resize", switchInput);
+
+
