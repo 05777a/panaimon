@@ -142,4 +142,17 @@ switchInput();
 // 画面サイズ変更時にも適用
 window.addEventListener("resize", switchInput);
 
+document.getElementById("toggleHistory").addEventListener("click", function() {
+  const history = document.getElementById("history");
+  const toggleText = document.getElementById("toggleHistory");
 
+  // クラスを切り替え
+  history.classList.toggle("active");
+
+  // テキストを変更
+  if (history.classList.contains("active")) {
+    toggleText.textContent = "非表示";
+  } else {
+    toggleText.textContent = "表示";
+  }
+});
