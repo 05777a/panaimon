@@ -156,3 +156,7 @@ document.getElementById("toggleHistory").addEventListener("click", function() {
     toggleText.textContent = "表示";
   }
 });
+
+document.getElementById("buttonC").addEventListener("click", function() {
+  window.open("https://www.youtube.com/watch?v=" + currentVideo.videoId, "_blank"); // 飛びたいURLに変更
+});
