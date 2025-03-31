@@ -17,7 +17,7 @@ input, textarea {
  height: 12vh;
  color: #ffffff;
  background-color: rgb(238, 199, 70);
- padding: 30px 10px 10px 30px ;
+ padding: 10px 10px 10px 30px ;
  
  /* font-size: 25px; */
 }
@@ -34,6 +34,7 @@ input, textarea {
   margin-bottom: 10px;
   border: solid 1px;
   border-color: rgb(238, 199, 70);
+  border-radius: 5px;
 }
 
 #form1 {
@@ -44,10 +45,14 @@ input, textarea {
   border: 1px solid #000000;
   box-sizing: border-box;
   background: #ffffff;
-  margin: 0.5em 0;}
+  margin: 0.5em 0;
+  border-radius: 5px;
+}
+  
 
 #form2 {
   height: 2em; 
+  border-radius: 5px;
   font-size: 24px;
   display: inline-block;
   width: 100%;
@@ -136,6 +141,7 @@ button{
   background-color: rgb(196, 196, 196);
   color: black;
   font-size: 150%;
+  border-radius: 5px;
 }
 #buttonB{
   margin-bottom: 20px;
@@ -224,10 +230,16 @@ a{
 
 /* 履歴ボタン */
 #toggleHistory{
-  font-weight: bold;
+  font-weight: bold; 
   background-color: rgb(238, 199, 70);
   width: 100%;
   border-color: #ffffff;
   color: #ffffff;
   border-radius: 5px;
+ padding: 8px  ;
+}
+
+h1{
+  color: #000000;
+  
 }
