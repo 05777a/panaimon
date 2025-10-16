@@ -244,23 +244,24 @@ h1{
   
 }
 
-/* テキストボックスとボタンを横並び */
 #controlPanel {
   display: flex;
-  align-items: center; /* 高さを中央揃え */
+  align-items: center; /* 上下中央揃え */
   gap: 8px;
 }
 
-/* 高さを統一しつつ中の文字も中央に */
+/* テキストボックスとボタンを同じ高さに揃える */
 #keywordInput,
 #buttonA {
-  height: 40px;               /* 高さを統一 */
-  box-sizing: border-box;     /* padding + border を含めて高さを固定 */
+  height: 40px;               /* 高さ統一 */
+  line-height: 40px;          /* 文字の縦位置を中央に */
+  box-sizing: border-box;     /* padding + border を含める */
   padding: 0 12px;            /* 左右余白 */
   font-size: 16px;
+  vertical-align: middle;     /* button の微妙な上寄りを修正 */
 }
 
-/* ボタンは見た目調整 */
+/* ボタンはクリックカーソル */
 #buttonA {
   cursor: pointer;
 }
