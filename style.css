@@ -243,3 +243,24 @@ h1{
   color: #000000;
   
 }
+
+/* テキストボックスとボタンを横並び */
+#controlPanel {
+  display: flex;
+  align-items: center; /* 高さを中央揃え */
+  gap: 8px;
+}
+
+/* 高さを統一しつつ中の文字も中央に */
+#keywordInput,
+#buttonA {
+  height: 40px;               /* 高さを統一 */
+  box-sizing: border-box;     /* padding + border を含めて高さを固定 */
+  padding: 0 12px;            /* 左右余白 */
+  font-size: 16px;
+}
+
+/* ボタンは見た目調整 */
+#buttonA {
+  cursor: pointer;
+}
