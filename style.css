@@ -1,3 +1,4 @@
+
 body {
   height:100%;
   background-color: rgb(255, 252, 210);
@@ -269,3 +270,14 @@ h1{
 #buttonA {
   cursor: pointer;
 }
+
+#hint-area{
+  display: flex; 
+  align-items: center; 
+  gap: 10px;
+}
+
+#hint-text{
+  visibility: hidden; font-size: 0.9rem; color: #555; white-space: nowrap;
+}
+
