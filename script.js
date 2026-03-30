@@ -1301,6 +1301,8 @@ document.getElementById("buttonB").addEventListener("click", () => {
   }
 });
 
+
+
 // ==============================
 // 📜 履歴表示切替
 // ==============================
@@ -1460,3 +1462,70 @@ document.getElementById("buttonA").addEventListener("click", () => {
   document.getElementById("title").style.visibility = "hidden";
   clearText();
 });
+
+// ==============================
+// 💡 ヒント表示機能（1/3ランダム公開版）
+// ==============================
+document.getElementById("hintButton").addEventListener("click", () => {
+  if (!currentVideo) {
+    alert("先にサムネイルを表示してください。");
+    return;
+  }
+
+  const hintElement = document.getElementById("hintText");
+  const fullTitle = currentVideo.title;
+  const titleArray = fullTitle.split('');
+
+  // 1. マスクしない記号などを定義
+  const keepVisibleReg = /[\s【】「」『』\[\]()（）、！!？?._\-+]/;
+  const maskableIndices = [];
+
+  // 2. マスク対象（記号以外）の場所をリストアップ
+  for (let i = 0; i < titleArray.length; i++) {
+    if (!keepVisibleReg.test(titleArray[i])) {
+      maskableIndices.push(i);
+    }
+  }
+
+  // 3. 公開する文字数を計算（1/3、最低1文字）
+  let revealCount = Math.floor(maskableIndices.length / 3);
+  if (revealCount === 0 && maskableIndices.length > 0) revealCount = 1;
+
+  // 4. 公開する場所をランダムに選ぶ
+  const shuffled = maskableIndices.slice().sort(() => 0.5 - Math.random());
+  const revealedIndices = new Set(shuffled.slice(0, revealCount));
+
+  // 5. ヒント文字列を組み立て
+  let hint = '';
+  for (let i = 0; i < titleArray.length; i++) {
+    if (keepVisibleReg.test(titleArray[i]) || revealedIndices.has(i)) {
+      hint += titleArray[i]; // 記号または当選した文字を表示
+    } else {
+      hint += '○'; // それ以外を伏せ字
+    }
+  }
+
+  // 表示更新（投稿日も添えて）
+  hintElement.innerHTML = `ヒント：${hint} <br><small>(${currentVideo.publishedAt} 投稿)</small>`;
+  hintElement.style.visibility = "visible";
+  
+  // 一度押したら無効化する場合（任意）
+  document.getElementById("hintButton").disabled = true;
+  document.getElementById("hintButton").innerText = "ヒント表示済";
+});
+
+// buttonA（次の問題）を押したときにヒントを隠す処理
+document.getElementById("buttonA").addEventListener("click", () => {
+  const hintElement = document.getElementById("hintText");
+  if (hintElement) {
+    hintElement.style.visibility = "hidden";
+    hintElement.innerText = "";
+  }
+  // ボタンを復活させる
+  const hintBtn = document.getElementById("hintButton");
+  if (hintBtn) {
+    hintBtn.disabled = false;
+    hintBtn.innerText = "ヒントを表示";
+  }
+});
+
