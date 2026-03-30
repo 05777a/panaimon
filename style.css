@@ -252,13 +252,17 @@ h1{
 
 /* テキストボックスとボタンを同じ高さに揃える */
 #keywordInput,
-#buttonA {
+#buttonA,#startDate,#endDate {
   height: 40px;               /* 高さ統一 */
   line-height: 40px;          /* 文字の縦位置を中央に */
   box-sizing: border-box;     /* padding + border を含める */
   padding: 0 12px;            /* 左右余白 */
   font-size: 16px;
   vertical-align: middle;     /* button の微妙な上寄りを修正 */
+}
+
+#startDate,#endDate{
+  max-width: 170px;
 }
 
 /* ボタンはクリックカーソル */
