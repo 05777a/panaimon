@@ -1644,3 +1644,36 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 });
+
+
+//=================
+//      about
+//=================
+document.addEventListener("DOMContentLoaded", () => {
+  const termsModal = document.getElementById("terms-modal");
+  const termsOpenBtn = document.getElementById("terms-open-btn");
+  const termsCloseBtn = document.getElementById("close-terms");
+
+  // 利用規約を開く
+  if (termsOpenBtn) {
+    termsOpenBtn.addEventListener("click", () => {
+      termsModal.classList.remove("hidden");
+      // ハンバーガーメニューが開いている場合は閉じる
+      document.getElementById("nav-menu").classList.remove("show");
+    });
+  }
+
+  // 利用規約を閉じる（×ボタン）
+  if (termsCloseBtn) {
+    termsCloseBtn.addEventListener("click", () => {
+      termsModal.classList.add("hidden");
+    });
+  }
+
+  // 背景クリックで閉じる（おまけ）
+  termsModal.addEventListener("click", (e) => {
+    if (e.target === termsModal) {
+      termsModal.classList.add("hidden");
+    }
+  });
+});
