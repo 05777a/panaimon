@@ -1,81 +1,91 @@
 <!DOCTYPE html>
 <html lang="ja">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>chぱないもん サムネイルガチャ</title>
-    <link rel="stylesheet" href="style.css" />
-  </head>
-  <body>
-    <div class="container">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>chぱないもん サムネイルガチャ</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    
     <header>
-      <!-- <h1>サムネだけ見て<br>タイトル当て選手権</h1> -->
-      <img src="header.png" alt="chぱないもん サムネイルガチャ" class="header_img">
+      <img src="header.png" alt="chぱないもん" class="header_img">
       <button id="menu-icon">&#9776;</button>
       <nav id="nav-menu">
         <ul>
           <li id="li1">ホーム</li>
-  
           <li id="li2"><a href="about.html">このサイトについて</a></li>
         </ul>
       </nav>
     </header>
-    <div class="inner">
 
-    <main>
- 
-      <input id="keywordInput" type="text" class="title_text" placeholder="キーワードで絞る（例: 原神）" style="vertical-align: middle; margin-right:8px;">
-       <input type="date" id="startDate" class="date_input"> 〜 
-       <input type="date" id="endDate" class="date_input">
-      <button id="buttonA">サムネイル表示</button>
-  
-
-    <br />
-    <img id="thumbnail" src="" alt="YouTube サムネイル" />
-    <br />
-    <form>
-      <!-- <input type="text" id="form" class="title_text" name="form" /> -->
-      <!-- <textarea id="form" class="title_text"></textarea> -->
-      <div id="input-container"></div>
-    </form>
-
-    <div id="title-container">
-      <p
-        id="title"
-        class="title_text"
-        style="visibility: hidden; margin: 0"
-      ></p>
+    <main class="game-board">
       
-    </div>
-   <div id="hint-area">
-  <button id="hintButton" class="btn_style">ヒントを表示</button>
-  <div id="hintText" ></div>
-</div>
-    <button id="buttonB">タイトル表示</button>
-    <button id="buttonC">動画を視聴する</button>
-    <div>
-      <h2>履歴</h2>
-      <button id="toggleHistory">表示</button>
-      <div id="history" class="hidden"></div>
-    </div>
-    <div>
-      <h2>結果</h2>
-      <span id="result1">0問中</span><span id="result2">0問正解！</span>
-      <div id="rate">正答率:0%</div>
-      <button id="tweetButton">ツイートする</button>
+      <div class="panel settings-panel">
+        <input id="keywordInput" type="text" placeholder="キーワード (例: 原神)">
+        <div class="date-group">
+          <input type="date" id="startDate" class="date_input">〜<input type="date" id="endDate" class="date_input">
+        </div>
+        <button id="buttonA" class="action-btn next-btn">▶ 次の問題を引く</button>
+      </div>
+
+      <div class="panel monitor-panel">
+        <img id="thumbnail" src="" alt="YouTube サムネイル" />
+      </div>
+
+      <div class="panel control-panel">
+        
+        <div id="hint-area">
+          <button id="hintButton" class="hint-btn">💡 ヒント 表示/非表示</button>
+          <div id="hint-content" class="hidden">
+            <span id="hintText"></span>
+          </div>
+        </div>
+
+        <form onsubmit="return false;">
+          <div id="input-container">
+            </div>
+        </form>
+
+        <div id="title-container">
+          <p id="title" style="visibility: hidden; margin: 0"></p>
+        </div>
+
+        <div class="button-grid">
+          <button id="buttonB" class="action-btn check-btn">⭕ 答え合わせ</button>
+          <button id="buttonC" class="action-btn video-btn">📺 動画を見る</button>
+        </div>
+
+      </div>
+
+      <div class="status-bar">
+        <div class="stats">
+          <span id="result1">0問中</span>
+          <span id="result2">0問正解！</span>
+          <span id="rate">正答率:0%</span>
+        </div>
+        <div class="sub-actions">
+          <button id="toggleHistory" class="sub-btn">履歴</button>
+          <button id="tweetButton" class="sub-btn tweet-btn">ポスト</button>
+        </div>
+      </div>
+
+    </main>
+
+    <div id="history-modal" class="modal-overlay hidden">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>📜 解答履歴</h2>
+          <button id="closeHistory" class="modal-close-btn">×</button>
+        </div>
+        <div id="history-body">
+          <div id="history"></div>
+        </div>
+      </div>
     </div>
 
-
-   </main>
   </div>
-
-  <footer>
-  
-  </footer>
-
-  </div>
-
   <script src="script.js"></script>
-  </body>
-
+</body>
 </html>
