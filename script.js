@@ -1237,260 +1237,167 @@ const videos = [
   {videoId: 'gJxyHCT-0V8', title: '登録者10人記念に10人の攻撃を滅昇竜に変換する【サンブレイク】', publishedAt: '2023-03-29'},
   {videoId: 'g3ZCu7lJHM0', title: '俺よりオトモアイルーのほうがモンハン上手くないか？【サンブレイク】', publishedAt: '2023-03-26'},
 ];
-
-
+// ==============================
+// 📋 初期変数
+// ==============================
 let currentVideo = null; // 現在の動画データ
 let count = 0;           // 問題数
 let count_result = 0;    // 正解数
+let hintLevel = 0;       // ヒントの段階 (0〜3)
 
 // ==============================
-// 🔍 サムネイル表示（キーワード検索付き）
+// 🔊 演出用の関数（◯×表示と音）
 // ==============================
-document.getElementById("buttonA").addEventListener("click", () => {
-  const keyword = (document.getElementById("keywordInput")?.value || "").trim();
+function playResultEffect(isCorrect) {
+  const overlay = document.getElementById("result-overlay");
+  const mark = document.getElementById("result-mark");
+  const soundCorrect = document.getElementById("sound-correct");
+  const soundIncorrect = document.getElementById("sound-incorrect");
 
-  // キーワードで絞り込み（空なら全件）
-  let candidates;
-  if (keyword === "") {
-    candidates = videos.slice();
-  } else {
-    const keyLower = keyword.toLowerCase();
-    candidates = videos.filter(v => v.title.toLowerCase().includes(keyLower));
+  if (!overlay || !mark) return; // 要素がなければ何もしない
+
+  // 1. マークの内容と色を設定
+  mark.innerText = isCorrect ? "◯" : "×";
+  mark.style.color = isCorrect ? "#e74c3c" : "#3498db"; 
+
+  // 2. 音を鳴らす（ファイルがない場合のエラーを防ぐ処理付き）
+  const sound = isCorrect ? soundCorrect : soundIncorrect;
+  if (sound) {
+    sound.currentTime = 0;
+    sound.play().catch(e => console.warn("音源ファイルが見つかりません:", e));
   }
 
-  // 該当がない場合
-  if (!candidates || candidates.length === 0) {
-    alert("該当する動画が見つかりませんでした。");
-    return;
-  }
-
-  // フィルタ後の中からランダム選択
-  currentVideo = candidates[Math.floor(Math.random() * candidates.length)];
-
-  // サムネイル表示
-  const thumbnailUrl = `https://img.youtube.com/vi/${currentVideo.videoId}/maxresdefault.jpg`;
-  document.getElementById("thumbnail").src = thumbnailUrl;
-
-  // タイトル非表示
-  document.getElementById("title").style.visibility = "hidden";
-
-  // フォームクリア
-  clearText();
-});
-
-// Enterキーでもサムネイル表示
-document.getElementById("keywordInput").addEventListener("keydown", (e) => {
-  if (e.key === "Enter") {
-    e.preventDefault();
-    document.getElementById("buttonA").click();
-  }
-});
+  // 3. 表示して0.8秒で隠す
+  overlay.classList.remove("hidden");
+  setTimeout(() => {
+    overlay.classList.add("hidden");
+  }, 800);
+}
 
 // ==============================
-// 🎯 タイトル表示（正答判定 + 履歴更新）
+// 🔍 サムネイル表示（次へ：buttonA）
 // ==============================
-document.getElementById("buttonB").addEventListener("click", () => {
-  count_up();
-  historyText();
+const btnA = document.getElementById("buttonA");
+if (btnA) {
+  btnA.addEventListener("click", () => {
+    const keyword = (document.getElementById("keywordInput")?.value || "").trim().toLowerCase();
+    const startDate = document.getElementById("startDate")?.value;
+    const endDate = document.getElementById("endDate")?.value;
 
-  if (currentVideo) {
-    document.getElementById("title").innerText = `${currentVideo.title}`;
-    document.getElementById("title").style.visibility = "visible";
-  } else {
-    alert("サムネイルが表示されていません。");
-  }
-});
+    // フィルタリング
+    let candidates = videos.filter(v => {
+      const matchKeyword = keyword === "" || v.title.toLowerCase().includes(keyword);
+      const videoDate = v.publishedAt ? v.publishedAt.split(' ')[0].replace(/\//g, '-') : "";
+      let matchDate = true;
+      if (startDate && videoDate < startDate) matchDate = false;
+      if (endDate && videoDate > endDate) matchDate = false;
+      return matchKeyword && matchDate;
+    });
 
-
-// ==============================
-// 📜 履歴表示切替（ポップアップ版）
-// ==============================
-document.getElementById("toggleHistory").addEventListener("click", function() {
-  const historyModal = document.getElementById("history-modal");
-  
-  // hiddenクラスを付け外ししてポップアップを開閉
-  historyModal.classList.toggle("hidden");
-});
-
-// ポップアップの外側（黒い背景）をタップした時も閉じるようにするおまけ
-document.getElementById("history-modal").addEventListener("click", function(e) {
-  if (e.target.id === "history-modal") {
-    this.classList.add("hidden");
-  }
-});
-// ==============================
-// ▶️ 動画を視聴するボタン
-// ==============================
-document.getElementById("buttonC").addEventListener("click", function() {
-  if (currentVideo && currentVideo.videoId) {
-    window.open("https://www.youtube.com/watch?v=" + currentVideo.videoId, "_blank");
-  } else {
-    alert("先にサムネイルを表示してください。");
-  }
-});
-
-// ==============================
-// 🐦 ツイート機能
-// ==============================
-document.getElementById("tweetButton").addEventListener("click", function () {
-  const tweetCount = count || 0;
-  const tweetCorrect = count_result || 0;
-  const rate = tweetCount > 0 ? Math.round((tweetCorrect / tweetCount) * 100) : 0;
-  const tweetText = `サムネだけ見てタイトル当て選手権\n${tweetCount}問中${tweetCorrect}問正解しました！(正答率:${rate}%)\nhttps://05777a.github.io/panaimon/index.html`;
-  const tweetUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(tweetText)}`;
-  window.open(tweetUrl, "_blank");
-});
-
-// ==============================
-// 🔢 正解数カウント
-// ==============================
-function count_up() {
-  if (currentVideo) count++;
-
-  const form1 = document.getElementById("form1");
-  const form2 = document.getElementById("form2");
-
-  if (currentVideo && currentVideo.title) {
-    if ((form1 && form1.value.trim() === currentVideo.title) ||
-        (form2 && form2.value.trim() === currentVideo.title)) {
-      count_result++;
+    if (candidates.length === 0) {
+      alert("該当する動画が見つかりませんでした。");
+      return;
     }
-  }
 
-  result1.innerHTML = count + "問中";
-  result2.innerHTML = count_result + "問正解！";
-  rate.innerHTML = "正答率：" + Math.round((count_result / count) * 100) + "%";
-}
+    // ランダム選択
+    currentVideo = candidates[Math.floor(Math.random() * candidates.length)];
+    currentVideo.shuffledIndices = null; // ヒント用リセット
 
-// ==============================
-// 🧹 フォームクリア
-// ==============================
-function clearText() {
-  const form1 = document.getElementById("form1");
-  const form2 = document.getElementById("form2");
-  if (form1) form1.value = '';
-  if (form2) form2.value = '';
-}
-
-// ==============================
-// 📜 履歴更新
-// ==============================
-function historyText() {
-  const history = document.getElementById("history");
-  const form1 = document.getElementById("form1");
-  const form2 = document.getElementById("form2");
-
-  let newHistoryText = '';
-
-  if (form1 && form1.value.trim() !== '') {
-    newHistoryText += `回答: ${form1.value}<br>`;
-  }
-  if (form2 && form2.value.trim() !== '') {
-    newHistoryText += `回答: ${form2.value}<br>`;
-  }
-
-  if (currentVideo && currentVideo.title) {
-    newHistoryText += `正解: <a href="https://www.youtube.com/watch?v=${currentVideo.videoId}" target="_blank">${currentVideo.title}</a><br>`;
-  }
-
-  if (newHistoryText) {
-    history.innerHTML += newHistoryText + '<br>';
-  }
-}
-
-// ==============================
-// 💬 入力フォーム切替（スマホ用）
-// ==============================
-function switchInput() {
-  const container = document.getElementById("input-container");
-  if (window.matchMedia("(max-width: 1300px)").matches) {
-    container.innerHTML = '<textarea id="form2" class="title_text"></textarea>';
-  } else {
-    container.innerHTML = '<input type="text" class="title_text" id="form1">';
-  }
-}
-switchInput();
-window.addEventListener("resize", switchInput);
-
-// ==============================
-// 📱 ナビメニュー開閉
-// ==============================
-document.addEventListener("DOMContentLoaded", function () {
-  const menuIcon = document.getElementById("menu-icon");
-  const navMenu = document.getElementById("nav-menu");
-
-  menuIcon.addEventListener("click", function () {
-    navMenu.classList.toggle("active");
-  });
-});
-
-document.getElementById("buttonA").addEventListener("click", () => {
-  const keyword = (document.getElementById("keywordInput")?.value || "").trim().toLowerCase();
-  
-  // 追加：入力された日付を取得
-  const startDate = document.getElementById("startDate").value; // YYYY-MM-DD 形式
-  const endDate = document.getElementById("endDate").value;     // YYYY-MM-DD 形式
-
-  // フィルタリング処理
-  let candidates = videos.filter(v => {
-    // 1. キーワードチェック
-    const matchKeyword = keyword === "" || v.title.toLowerCase().includes(keyword);
+    // 画面表示リセット
+    const thumbImg = document.getElementById("thumbnail");
+    if (thumbImg) thumbImg.src = `https://img.youtube.com/vi/${currentVideo.videoId}/maxresdefault.jpg`;
     
-    // 2. 日付チェック（動画の yyyy/MM/dd を yyyy-MM-dd に変換して比較）
-    const videoDate = v.publishedAt ? v.publishedAt.split(' ')[0].replace(/\//g, '-') : "";
+    const titleEl = document.getElementById("title");
+    if (titleEl) {
+      titleEl.style.visibility = "hidden";
+      titleEl.innerText = "";
+    }
     
-    let matchDate = true;
-    if (startDate && videoDate < startDate) matchDate = false;
-    if (endDate && videoDate > endDate) matchDate = false;
+    // ヒント状態のリセット
+    hintLevel = 0;
+    const hintBtn = document.getElementById("hintButton");
+    if (hintBtn) {
+      hintBtn.innerText = "💡 ヒントを表示 (1/3)";
+      hintBtn.style.opacity = "1";
+    }
+    document.getElementById("hint-content")?.classList.add("hidden");
+    const hintText = document.getElementById("hintText");
+    if (hintText) hintText.innerText = "";
 
-    return matchKeyword && matchDate;
+    clearText();
   });
+}
 
-  // 該当がない場合
-  if (candidates.length === 0) {
-    alert("該当する期間・キーワードの動画が見つかりませんでした。");
-    return;
-  }
-
-  // フィルタ後の中からランダム選択
-  currentVideo = candidates[Math.floor(Math.random() * candidates.length)];
-
-  // サムネイル表示処理（以下略）
-  const thumbnailUrl = `https://img.youtube.com/vi/${currentVideo.videoId}/maxresdefault.jpg`;
-  document.getElementById("thumbnail").src = thumbnailUrl;
-  document.getElementById("title").style.visibility = "hidden";
-  clearText();
-});
 // ==============================
-// 💡 ヒント表示・切り替え機能
+// 🎯 正解判定 & 表示 (buttonB)
 // ==============================
-document.getElementById("hintButton").addEventListener("click", () => {
-  if (!currentVideo) {
-    alert("先にサムネイルを表示してください。");
-    return;
-  }
+const btnB = document.getElementById("buttonB");
+if (btnB) {
+  btnB.addEventListener("click", () => {
+    if (!currentVideo) {
+      alert("先にサムネイルを表示してください。");
+      return;
+    }
 
-  const hintContent = document.getElementById("hint-content");
-  const hintElement = document.getElementById("hintText");
+    // 入力値の取得（form1 か form2 のある方を優先）
+    const f1 = document.getElementById("form1");
+    const f2 = document.getElementById("form2");
+    const userAnswer = (f1 ? f1.value : f2 ? f2.value : "").trim();
+    
+    // 判定
+    const isCorrect = (userAnswer === currentVideo.title);
 
-  // すでにヒントが生成されているかチェック（空なら生成）
-  if (hintElement.innerText === "") {
-    const fullTitle = currentVideo.title;
-    const titleArray = fullTitle.split('');
-    const keepVisibleReg = /[\s【】「」『』\[\]()（）、！!？?._\-+]/;
+    // ◯×と音の演出
+    playResultEffect(isCorrect);
+
+    // スコア計算
+    count++;
+    if (isCorrect) count_result++;
+
+    // スコア表示更新
+    if (document.getElementById("result1")) document.getElementById("result1").innerHTML = count + "問中";
+    if (document.getElementById("result2")) document.getElementById("result2").innerHTML = count_result + "問正解！";
+    if (document.getElementById("rate")) document.getElementById("rate").innerHTML = "正答率：" + Math.round((count_result / count) * 100) + "%";
+
+    // 正解タイトルを表示
+    const titleEl = document.getElementById("title");
+    if (titleEl) {
+      titleEl.innerText = currentVideo.title;
+      titleEl.style.visibility = "visible";
+    }
+
+    // 履歴に追加
+    historyText(userAnswer, isCorrect);
+  });
+}
+
+// ==============================
+// 💡 ヒント機能
+// ==============================
+const hintBtn = document.getElementById("hintButton");
+if (hintBtn) {
+  hintBtn.addEventListener("click", () => {
+    if (!currentVideo) return;
+
+    hintLevel++;
+    if (hintLevel > 3) hintLevel = 3;
+
+    const hintTextEl = document.getElementById("hintText");
+    const titleArray = currentVideo.title.split('');
+    const keepVisibleReg = /[【】「」『』\[\]()（）\s]/; 
+    
     const maskableIndices = [];
-
     for (let i = 0; i < titleArray.length; i++) {
-      if (!keepVisibleReg.test(titleArray[i])) {
-        maskableIndices.push(i);
-      }
+      if (!keepVisibleReg.test(titleArray[i])) maskableIndices.push(i);
     }
 
-    let revealCount = Math.floor(maskableIndices.length / 3);
-    if (revealCount === 0 && maskableIndices.length > 0) revealCount = 1;
+    if (!currentVideo.shuffledIndices) {
+      currentVideo.shuffledIndices = maskableIndices.slice().sort(() => 0.5 - Math.random());
+    }
 
-    const shuffled = maskableIndices.slice().sort(() => 0.5 - Math.random());
-    const revealedIndices = new Set(shuffled.slice(0, revealCount));
+    let revealRate = [0, 0, 0.33, 0.6][hintLevel];
+    const revealCount = Math.floor(maskableIndices.length * revealRate);
+    const revealedIndices = new Set(currentVideo.shuffledIndices.slice(0, revealCount));
 
     let hint = '';
     for (let i = 0; i < titleArray.length; i++) {
@@ -1500,180 +1407,132 @@ document.getElementById("hintButton").addEventListener("click", () => {
         hint += '○';
       }
     }
-    hintElement.innerHTML = `ヒント：${hint} <br><small>(${currentVideo.publishedAt} 投稿)</small>`;
-  }
 
-  // 表示・非表示を切り替える（hiddenクラスの付け外し）
-  hintContent.classList.toggle("hidden");
-});
-
-// 次の問題（buttonA）を押したときはヒントを完全にリセットする
-document.getElementById("buttonA").addEventListener("click", () => {
-  const hintContent = document.getElementById("hint-content");
-  const hintElement = document.getElementById("hintText");
-  
-  if (hintContent) hintContent.classList.add("hidden"); // 非表示に戻す
-  if (hintElement) hintElement.innerText = "";        // 中身を空にする
-});
-
-// --- 追加：ヒントの状態管理 ---
-let hintLevel = 0; 
-
-document.getElementById("hintButton").addEventListener("click", () => {
-  if (!currentVideo) {
-    alert("先にサムネイルを表示してください。");
-    return;
-  }
-
-  // 段階を上げる（最大3まで）
-  hintLevel++;
-  if (hintLevel > 3) hintLevel = 3;
-
-  const hintContent = document.getElementById("hint-content");
-  const hintElement = document.getElementById("hintText");
-  const hintBtn = document.getElementById("hintButton");
-  
-  const fullTitle = currentVideo.title;
-  const titleArray = fullTitle.split('');
-
-  // 1. 記号（【 】など）だけは最初から見せる設定
-  // ※中の文字はマスク対象に含めるため、正規表現を調整
-  const keepVisibleReg = /[【】「」『』\[\]()（）\s]/; 
-  const maskableIndices = [];
-
-  for (let i = 0; i < titleArray.length; i++) {
-    if (!keepVisibleReg.test(titleArray[i])) {
-      maskableIndices.push(i);
+    if (hintTextEl) {
+      hintTextEl.innerHTML = `<strong>ヒント ${hintLevel}/3：</strong>${hint} <small>(${currentVideo.publishedAt} 投稿)</small>`;
     }
-  }
+    document.getElementById("hint-content")?.classList.remove("hidden");
 
-  // 2. 段階に応じた公開率の設定
-  let revealRate = 0;
-  if (hintLevel === 1) revealRate = 0;    // 全伏せ（記号のみ）
-  if (hintLevel === 2) revealRate = 0.33; // 1/3公開
-  if (hintLevel === 3) revealRate = 0.6;  // 約半分以上公開
-
-  // 3. 公開する場所を固定するために、動画ごとにランダム順を保持
-  if (!currentVideo.shuffledIndices) {
-    currentVideo.shuffledIndices = maskableIndices.slice().sort(() => 0.5 - Math.random());
-  }
-
-  const revealCount = Math.floor(maskableIndices.length * revealRate);
-  const revealedIndices = new Set(currentVideo.shuffledIndices.slice(0, revealCount));
-
-  // 4. 文字列の組み立て
-  let hint = '';
-  for (let i = 0; i < titleArray.length; i++) {
-    if (keepVisibleReg.test(titleArray[i]) || revealedIndices.has(i)) {
-      hint += titleArray[i];
+    if (hintLevel < 3) {
+      hintBtn.innerText = `💡 次のヒントを表示 (${hintLevel + 1}/3)`;
     } else {
-      hint += '○';
-    }
-  }
-
-  // 表示更新
-  hintElement.innerHTML = `<strong>ヒント ${hintLevel}/3：</strong>${hint} <small>(${currentVideo.publishedAt} 投稿)</small>`;
- 
- 
-  hintContent.classList.remove("hidden");
-
-  // ボタンの文字を変える
-  if (hintLevel < 3) {
-    hintBtn.innerText = `💡 次のヒントを表示 (${hintLevel + 1}/3)`;
-  } else {
-    hintBtn.innerText = "💡 ヒント最大表示中";
-    hintBtn.style.opacity = "0.6";
-  }
-});
-
-// --- buttonA（次を引く）の時にリセットする処理を追加 ---
-document.getElementById("buttonA").addEventListener("click", () => {
-  hintLevel = 0; // レベルをリセット
-  const hintBtn = document.getElementById("hintButton");
-  hintBtn.innerText = "💡 ヒントを表示 (1/3)";
-  hintBtn.style.opacity = "1";
-  document.getElementById("hint-content").classList.add("hidden");
-  document.getElementById("hintText").innerText = "";
-});
-
-
-// --- 履歴モーダルを閉じるボタン（×）の処理を追加 ---
-document.getElementById("closeHistory").addEventListener("click", function() {
-  document.getElementById("history-modal").classList.add("hidden");
-});
-
-// ==============================
-// 📱 ナビメニュー開閉
-// ==============================
-document.addEventListener("DOMContentLoaded", function () {
-  const menuIcon = document.getElementById("menu-icon");
-  const navMenu = document.getElementById("nav-menu");
-
-  if (menuIcon && navMenu) {
-    menuIcon.addEventListener("click", function (e) {
-      // メニューの active クラスを付け外しする
-      navMenu.classList.toggle("active");
-      // クリックイベントが他に伝わって即座に閉じないようにする
-      e.stopPropagation();
-    });
-
-    // メニュー以外をクリックした時に閉じる（おまけ機能）
-    document.addEventListener("click", function () {
-      navMenu.classList.remove("active");
-    });
-  }
-});
-
-// 画面が読み込まれたら実行
-document.addEventListener("DOMContentLoaded", () => {
-  const menuIcon = document.getElementById("menu-icon");
-  const navMenu = document.getElementById("nav-menu");
-
-  if (menuIcon && navMenu) {
-    menuIcon.addEventListener("click", (e) => {
-      // .show クラスを付け外しする
-      navMenu.classList.toggle("show");
-      
-      // メニューをクリックした時にイベントが外に漏れないようにする
-      e.stopPropagation();
-    });
-
-    // メニュー以外（画面のどこか）をクリックしたら閉じるようにする
-    document.addEventListener("click", () => {
-      navMenu.classList.remove("show");
-    });
-  }
-});
-
-
-//=================
-//      about
-//=================
-document.addEventListener("DOMContentLoaded", () => {
-  const termsModal = document.getElementById("terms-modal");
-  const termsOpenBtn = document.getElementById("terms-open-btn");
-  const termsCloseBtn = document.getElementById("close-terms");
-
-  // 利用規約を開く
-  if (termsOpenBtn) {
-    termsOpenBtn.addEventListener("click", () => {
-      termsModal.classList.remove("hidden");
-      // ハンバーガーメニューが開いている場合は閉じる
-      document.getElementById("nav-menu").classList.remove("show");
-    });
-  }
-
-  // 利用規約を閉じる（×ボタン）
-  if (termsCloseBtn) {
-    termsCloseBtn.addEventListener("click", () => {
-      termsModal.classList.add("hidden");
-    });
-  }
-
-  // 背景クリックで閉じる（おまけ）
-  termsModal.addEventListener("click", (e) => {
-    if (e.target === termsModal) {
-      termsModal.classList.add("hidden");
+      hintBtn.innerText = "💡 ヒント最大表示中";
+      hintBtn.style.opacity = "0.6";
     }
   });
+}
+
+// ==============================
+// 📜 履歴・モーダル
+// ==============================
+function historyText(userAnswer, isCorrect) {
+  const history = document.getElementById("history");
+  if (!history) return;
+  let mark = isCorrect ? "【正解】" : "【不正解】";
+  let color = isCorrect ? "#27ae60" : "#e74c3c";
+  let content = `<span style="color:${color}">${mark}</span> 回答: ${userAnswer || "(空欄)"}<br>`;
+  content += `正解: <a href="https://www.youtube.com/watch?v=${currentVideo.videoId}" target="_blank">${currentVideo.title}</a><br><br>`;
+  history.innerHTML += content;
+}
+
+function clearText() {
+  const f1 = document.getElementById("form1");
+  const f2 = document.getElementById("form2");
+  if (f1) f1.value = '';
+  if (f2) f2.value = '';
+}
+
+// 履歴モーダル
+document.getElementById("toggleHistory")?.addEventListener("click", () => {
+  document.getElementById("history-modal")?.classList.remove("hidden");
 });
+document.getElementById("closeHistory")?.addEventListener("click", () => {
+  document.getElementById("history-modal")?.classList.add("hidden");
+});
+
+// 利用規約モーダル
+const termsModal = document.getElementById("terms-modal");
+document.getElementById("terms-open-btn")?.addEventListener("click", () => {
+  termsModal?.classList.remove("hidden");
+  document.getElementById("nav-menu")?.classList.remove("show");
+});
+document.getElementById("close-terms")?.addEventListener("click", () => {
+  termsModal?.classList.add("hidden");
+});
+
+// 視聴ボタン
+document.getElementById("buttonC")?.addEventListener("click", () => {
+  if (currentVideo) window.open("https://www.youtube.com/watch?v=" + currentVideo.videoId, "_blank");
+});
+
+// ツイートボタン
+document.getElementById("tweetButton")?.addEventListener("click", () => {
+  const rate = count > 0 ? Math.round((count_result / count) * 100) : 0;
+  const text = `サムネだけ見てタイトル当て選手権\n${count}問中${count_result}問正解しました！(正答率:${rate}%)\nhttps://05777a.github.io/panaimon/index.html`;
+  window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`, "_blank");
+});
+
+// 入力フォーム切替（スマホ・PC対応）
+function switchInput() {
+  const container = document.getElementById("input-container");
+  if (!container) return;
+  if (window.matchMedia("(max-width: 1300px)").matches) {
+    container.innerHTML = '<textarea id="form2" class="title_text" placeholder="タイトルを入力..."></textarea>';
+  } else {
+    container.innerHTML = '<input type="text" class="title_text" id="form1" placeholder="タイトルを入力...">';
+  }
+}
+window.addEventListener("resize", switchInput);
+switchInput();
+
+//==========
+//音声
+//==========
+let isMuted = false; // 音声の状態を管理
+
+const muteBtn = document.getElementById("mute-btn");
+const muteIcon = document.getElementById("mute-icon");
+
+if (muteBtn) {
+  muteBtn.addEventListener("click", () => {
+    isMuted = !isMuted; // 状態を反転
+    
+    // アイコンの切り替え
+    if (isMuted) {
+      muteIcon.innerText = "🔇";
+      muteIcon.style.color = "#ccc"; // ミュート時は少し薄くする
+    } else {
+      muteIcon.innerText = "🔊";
+      muteIcon.style.color = "#666";
+    }
+  });
+}
+
+// ==============================
+// 🔊 演出用の関数を修正（ミュート対応）
+// ==============================
+function playResultEffect(isCorrect) {
+  const overlay = document.getElementById("result-overlay");
+  const mark = document.getElementById("result-mark");
+  
+  if (!overlay || !mark) return;
+
+  mark.innerText = isCorrect ? "◯" : "×";
+  mark.style.color = isCorrect ? "#e74c3c" : "#3498db"; 
+
+  // ★修正：ミュート状態（isMuted）が false の時だけ音を鳴らす
+  if (!isMuted) {
+    const soundCorrect = document.getElementById("sound-correct");
+    const soundIncorrect = document.getElementById("sound-incorrect");
+    const sound = isCorrect ? soundCorrect : soundIncorrect;
+    if (sound) {
+      sound.currentTime = 0;
+      sound.play().catch(e => console.warn("再生失敗:", e));
+    }
+  }
+
+  overlay.classList.remove("hidden");
+  setTimeout(() => {
+    overlay.classList.add("hidden");
+  }, 800);
+}
