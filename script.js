@@ -1428,10 +1428,10 @@ if (hintBtn) {
 function historyText(userAnswer, isCorrect) {
   const history = document.getElementById("history");
   if (!history) return;
-  let mark = isCorrect ? "【正解】" : "【不正解】";
+  let mark = isCorrect ? "【正　解】" : "【不正解】";
   let color = isCorrect ? "#27ae60" : "#e74c3c";
   let content = `<span style="color:${color}">${mark}</span> 回答: ${userAnswer || "(空欄)"}<br>`;
-  content += `正解: <a href="https://www.youtube.com/watch?v=${currentVideo.videoId}" target="_blank">${currentVideo.title}</a><br><br>`;
+  content += `<div id=history-c>正解: <a href="https://www.youtube.com/watch?v=${currentVideo.videoId}" target="_blank">${currentVideo.title}</div></a><br><br>`;
   history.innerHTML += content;
 }
 
