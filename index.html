@@ -11,8 +11,14 @@
     
  <header>
   <img src="header.png" class="header_img">
+  <div id="header-btn">
+  <button id="mute-btn" class="info-icon-btn">
+    <span id="mute-icon" class="material-icons">🔊</span>
+  </button>
  <button id="terms-open-btn" style="background:none; border:none; font-size:26px; cursor:pointer; color:#777;">ⓘ</button>
+</div>
 </header>
+
 
 <div id="terms-modal" class="modal-overlay hidden">
   <div class="modal-content">
@@ -61,6 +67,9 @@
   </div>
     </div>
   </div>
+
+
+  
 </div>
     <main class="game-board">
       
@@ -129,5 +138,12 @@
 
   </div>
   <script src="script.js"></script>
+  <audio id="sound-correct" src="correct.mp3" preload="auto"></audio>
+<audio id="sound-incorrect" src="incorrect.mp3" preload="auto"></audio>
+
+<div id="result-overlay" class="hidden">
+  <div id="result-mark"></div>
+</div>
+
 </body>
 </html>
