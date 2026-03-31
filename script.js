@@ -1537,3 +1537,19 @@ function playResultEffect(isCorrect) {
     overlay.classList.add("hidden");
   }, 800);
 }
+
+// モーダルの外側をクリックしたら閉じる設定
+window.addEventListener("click", (e) => {
+  // 1. 履歴モーダルの背景がクリックされたか判定
+  const historyModal = document.getElementById("history-modal");
+  if (e.target === historyModal) {
+    historyModal.classList.add("hidden");
+  }
+
+  // 2. このサイトについて（利用規約）モーダルの背景がクリックされたか判定
+  const termsModal = document.getElementById("terms-modal");
+  if (e.target === termsModal) {
+    termsModal.classList.add("hidden");
+  }
+});
+
