@@ -225,6 +225,7 @@ header {
   min-height: 40px;
   margin-bottom: 5px;
   margin-left: 2px;
+  margin-right: 2px;
 }
 
 #title {
@@ -233,6 +234,7 @@ header {
   word-break: break-all;
   overflow-wrap: break-word;
   min-height: 40px;
+  min-width: 0;
   display: flex;
   align-items: center;
   padding: 0 12px;
@@ -240,6 +242,10 @@ header {
   background: rgba(241, 196, 15, 0.1);
   border-radius: 4px;
   font-weight: bold;
+
+        
+  line-break: anywhere;
+  box-sizing: border-box;
 }
 
 /* ボタン */
@@ -414,6 +420,7 @@ header {
   cursor: pointer;
 }
 
+
 #terms-body {
   padding: 20px;
   overflow-y: auto;
@@ -443,4 +450,14 @@ header {
 
 #history-c{
   padding-left: 85px;
+}
+
+
+
+
+/* もし input-container の中身（テキストボックス）がはみ出す場合 */
+#input-container input, #input-container textarea {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
 }
