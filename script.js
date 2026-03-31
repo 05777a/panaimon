@@ -1488,22 +1488,23 @@ switchInput();
 //==========
 //音声
 //==========
-let isMuted = false; // 音声の状態を管理
+// ★変更：最初から「ミュート（音オフ）」状態にする
+let isMuted = true; 
 
 const muteBtn = document.getElementById("mute-btn");
 const muteIcon = document.getElementById("mute-icon");
 
 if (muteBtn) {
   muteBtn.addEventListener("click", () => {
-    isMuted = !isMuted; // 状態を反転
+    isMuted = !isMuted; // 状態を反転（オン/オフを切り替え）
     
     // アイコンの切り替え
     if (isMuted) {
-      muteIcon.innerText = "🔇";
-      muteIcon.style.color = "#ccc"; // ミュート時は少し薄くする
+      muteIcon.innerText = "🔇"; // オフのマーク
+      muteBtn.style.opacity = "0.5"; // 少し薄くして「オフ感」を出す（お好みで）
     } else {
-      muteIcon.innerText = "🔊";
-      muteIcon.style.color = "#666";
+      muteIcon.innerText = "🔊"; // オンのマーク
+      muteBtn.style.opacity = "1";   // くっきり表示
     }
   });
 }
