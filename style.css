@@ -9,7 +9,7 @@ html, body {
   background-color: #fdfcf0; /* 薄いアイボリー */
   color: #333; /* 文字は濃いグレー */
   font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', sans-serif;
-  font-size: 18px; /* 標準（16px）より一回り大きく */
+  font-size: 16px; /* 標準（16px）より一回り大きく */
 }
 
 #htmlAbout,#bodyAbout{
