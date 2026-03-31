@@ -121,7 +121,7 @@ header {
   font-weight: bold;
 }
 
-#hint-area { display: flex; align-items: center; gap: 10px; min-height: 55px;}
+#hint-area { display: flex; align-items: center; gap: 10px; min-height: 40px;}
 .hint-btn {
   background: #f39c12; 
   color: #fff; 
