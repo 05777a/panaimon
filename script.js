@@ -1302,23 +1302,22 @@ document.getElementById("buttonB").addEventListener("click", () => {
 });
 
 
-
 // ==============================
-// 📜 履歴表示切替
+// 📜 履歴表示切替（ポップアップ版）
 // ==============================
 document.getElementById("toggleHistory").addEventListener("click", function() {
-  const history = document.getElementById("history");
-  const toggleText = document.getElementById("toggleHistory");
-
-  history.classList.toggle("active");
-
-  if (history.classList.contains("active")) {
-    toggleText.textContent = "非表示";
-  } else {
-    toggleText.textContent = "表示";
-  }
+  const historyModal = document.getElementById("history-modal");
+  
+  // hiddenクラスを付け外ししてポップアップを開閉
+  historyModal.classList.toggle("hidden");
 });
 
+// ポップアップの外側（黒い背景）をタップした時も閉じるようにするおまけ
+document.getElementById("history-modal").addEventListener("click", function(e) {
+  if (e.target.id === "history-modal") {
+    this.classList.add("hidden");
+  }
+});
 // ==============================
 // ▶️ 動画を視聴するボタン
 // ==============================
@@ -1462,9 +1461,8 @@ document.getElementById("buttonA").addEventListener("click", () => {
   document.getElementById("title").style.visibility = "hidden";
   clearText();
 });
-
 // ==============================
-// 💡 ヒント表示機能（1/3ランダム公開版）
+// 💡 ヒント表示・切り替え機能
 // ==============================
 document.getElementById("hintButton").addEventListener("click", () => {
   if (!currentVideo) {
@@ -1472,60 +1470,177 @@ document.getElementById("hintButton").addEventListener("click", () => {
     return;
   }
 
+  const hintContent = document.getElementById("hint-content");
   const hintElement = document.getElementById("hintText");
+
+  // すでにヒントが生成されているかチェック（空なら生成）
+  if (hintElement.innerText === "") {
+    const fullTitle = currentVideo.title;
+    const titleArray = fullTitle.split('');
+    const keepVisibleReg = /[\s【】「」『』\[\]()（）、！!？?._\-+]/;
+    const maskableIndices = [];
+
+    for (let i = 0; i < titleArray.length; i++) {
+      if (!keepVisibleReg.test(titleArray[i])) {
+        maskableIndices.push(i);
+      }
+    }
+
+    let revealCount = Math.floor(maskableIndices.length / 3);
+    if (revealCount === 0 && maskableIndices.length > 0) revealCount = 1;
+
+    const shuffled = maskableIndices.slice().sort(() => 0.5 - Math.random());
+    const revealedIndices = new Set(shuffled.slice(0, revealCount));
+
+    let hint = '';
+    for (let i = 0; i < titleArray.length; i++) {
+      if (keepVisibleReg.test(titleArray[i]) || revealedIndices.has(i)) {
+        hint += titleArray[i];
+      } else {
+        hint += '○';
+      }
+    }
+    hintElement.innerHTML = `ヒント：${hint} <br><small>(${currentVideo.publishedAt} 投稿)</small>`;
+  }
+
+  // 表示・非表示を切り替える（hiddenクラスの付け外し）
+  hintContent.classList.toggle("hidden");
+});
+
+// 次の問題（buttonA）を押したときはヒントを完全にリセットする
+document.getElementById("buttonA").addEventListener("click", () => {
+  const hintContent = document.getElementById("hint-content");
+  const hintElement = document.getElementById("hintText");
+  
+  if (hintContent) hintContent.classList.add("hidden"); // 非表示に戻す
+  if (hintElement) hintElement.innerText = "";        // 中身を空にする
+});
+
+// --- 追加：ヒントの状態管理 ---
+let hintLevel = 0; 
+
+document.getElementById("hintButton").addEventListener("click", () => {
+  if (!currentVideo) {
+    alert("先にサムネイルを表示してください。");
+    return;
+  }
+
+  // 段階を上げる（最大3まで）
+  hintLevel++;
+  if (hintLevel > 3) hintLevel = 3;
+
+  const hintContent = document.getElementById("hint-content");
+  const hintElement = document.getElementById("hintText");
+  const hintBtn = document.getElementById("hintButton");
+  
   const fullTitle = currentVideo.title;
   const titleArray = fullTitle.split('');
 
-  // 1. マスクしない記号などを定義
-  const keepVisibleReg = /[\s【】「」『』\[\]()（）、！!？?._\-+]/;
+  // 1. 記号（【 】など）だけは最初から見せる設定
+  // ※中の文字はマスク対象に含めるため、正規表現を調整
+  const keepVisibleReg = /[【】「」『』\[\]()（）\s]/; 
   const maskableIndices = [];
 
-  // 2. マスク対象（記号以外）の場所をリストアップ
   for (let i = 0; i < titleArray.length; i++) {
     if (!keepVisibleReg.test(titleArray[i])) {
       maskableIndices.push(i);
     }
   }
 
-  // 3. 公開する文字数を計算（1/3、最低1文字）
-  let revealCount = Math.floor(maskableIndices.length / 3);
-  if (revealCount === 0 && maskableIndices.length > 0) revealCount = 1;
+  // 2. 段階に応じた公開率の設定
+  let revealRate = 0;
+  if (hintLevel === 1) revealRate = 0;    // 全伏せ（記号のみ）
+  if (hintLevel === 2) revealRate = 0.33; // 1/3公開
+  if (hintLevel === 3) revealRate = 0.6;  // 約半分以上公開
 
-  // 4. 公開する場所をランダムに選ぶ
-  const shuffled = maskableIndices.slice().sort(() => 0.5 - Math.random());
-  const revealedIndices = new Set(shuffled.slice(0, revealCount));
+  // 3. 公開する場所を固定するために、動画ごとにランダム順を保持
+  if (!currentVideo.shuffledIndices) {
+    currentVideo.shuffledIndices = maskableIndices.slice().sort(() => 0.5 - Math.random());
+  }
 
-  // 5. ヒント文字列を組み立て
+  const revealCount = Math.floor(maskableIndices.length * revealRate);
+  const revealedIndices = new Set(currentVideo.shuffledIndices.slice(0, revealCount));
+
+  // 4. 文字列の組み立て
   let hint = '';
   for (let i = 0; i < titleArray.length; i++) {
     if (keepVisibleReg.test(titleArray[i]) || revealedIndices.has(i)) {
-      hint += titleArray[i]; // 記号または当選した文字を表示
+      hint += titleArray[i];
     } else {
-      hint += '○'; // それ以外を伏せ字
+      hint += '○';
     }
   }
 
-  // 表示更新（投稿日も添えて）
-  hintElement.innerHTML = `ヒント：${hint} <br><small>(${currentVideo.publishedAt} 投稿)</small>`;
-  hintElement.style.visibility = "visible";
-  
-  // 一度押したら無効化する場合（任意）
-  document.getElementById("hintButton").disabled = true;
-  document.getElementById("hintButton").innerText = "ヒント表示済";
+  // 表示更新
+  hintElement.innerHTML = `<strong>ヒント ${hintLevel}/3：</strong>${hint} <small>(${currentVideo.publishedAt} 投稿)</small>`;
+ 
+ 
+  hintContent.classList.remove("hidden");
+
+  // ボタンの文字を変える
+  if (hintLevel < 3) {
+    hintBtn.innerText = `💡 次のヒントを表示 (${hintLevel + 1}/3)`;
+  } else {
+    hintBtn.innerText = "💡 ヒント最大表示中";
+    hintBtn.style.opacity = "0.6";
+  }
 });
 
-// buttonA（次の問題）を押したときにヒントを隠す処理
+// --- buttonA（次を引く）の時にリセットする処理を追加 ---
 document.getElementById("buttonA").addEventListener("click", () => {
-  const hintElement = document.getElementById("hintText");
-  if (hintElement) {
-    hintElement.style.visibility = "hidden";
-    hintElement.innerText = "";
-  }
-  // ボタンを復活させる
+  hintLevel = 0; // レベルをリセット
   const hintBtn = document.getElementById("hintButton");
-  if (hintBtn) {
-    hintBtn.disabled = false;
-    hintBtn.innerText = "ヒントを表示";
+  hintBtn.innerText = "💡 ヒントを表示 (1/3)";
+  hintBtn.style.opacity = "1";
+  document.getElementById("hint-content").classList.add("hidden");
+  document.getElementById("hintText").innerText = "";
+});
+
+
+// --- 履歴モーダルを閉じるボタン（×）の処理を追加 ---
+document.getElementById("closeHistory").addEventListener("click", function() {
+  document.getElementById("history-modal").classList.add("hidden");
+});
+
+// ==============================
+// 📱 ナビメニュー開閉
+// ==============================
+document.addEventListener("DOMContentLoaded", function () {
+  const menuIcon = document.getElementById("menu-icon");
+  const navMenu = document.getElementById("nav-menu");
+
+  if (menuIcon && navMenu) {
+    menuIcon.addEventListener("click", function (e) {
+      // メニューの active クラスを付け外しする
+      navMenu.classList.toggle("active");
+      // クリックイベントが他に伝わって即座に閉じないようにする
+      e.stopPropagation();
+    });
+
+    // メニュー以外をクリックした時に閉じる（おまけ機能）
+    document.addEventListener("click", function () {
+      navMenu.classList.remove("active");
+    });
   }
 });
 
+// 画面が読み込まれたら実行
+document.addEventListener("DOMContentLoaded", () => {
+  const menuIcon = document.getElementById("menu-icon");
+  const navMenu = document.getElementById("nav-menu");
+
+  if (menuIcon && navMenu) {
+    menuIcon.addEventListener("click", (e) => {
+      // .show クラスを付け外しする
+      navMenu.classList.toggle("show");
+      
+      // メニューをクリックした時にイベントが外に漏れないようにする
+      e.stopPropagation();
+    });
+
+    // メニュー以外（画面のどこか）をクリックしたら閉じるようにする
+    document.addEventListener("click", () => {
+      navMenu.classList.remove("show");
+    });
+  }
+});
