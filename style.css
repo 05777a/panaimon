@@ -139,12 +139,24 @@ header {
 #hintText {
   display: block;
   width: 100%;
-  font-size: 110%;
+  font-size: 1.1rem;
   line-height: 1.4;
   color: #e67e22;
-  /* 1行に収まらない時は、単語の途中で変に切れず次の行へ送る */
-  word-wrap: break-word;
-  overflow-wrap: break-word;
+  font-weight: bold;
+
+  /* ★ここが重要：伏せ字の連続でも強制的に改行させる設定 */
+  word-break: break-all;     /* 単語の途中でも改行 */
+  overflow-wrap: break-word; /* 枠からはみ出しそうな時に改行 */
+  line-break: anywhere;      /* 【追加】記号の連続でもどこでも改行OKにする */
+  
+  white-space: normal;       /* 改行を許可 */
+}
+
+#hintText small {
+  white-space: nowrap;       /* 投稿日時はバラバラにならないように固定 */
+  font-weight: normal;
+  color: #888;
+  margin-left: 8px;
 }
 
 #hintText small {
