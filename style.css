@@ -36,14 +36,47 @@ overflow: auto;
 =================================== */
 header {
   height: 50px;
+  /* ↓ここで「左の画像」と「右の箱」を両端に分けています（正解です！） */
   display: flex; justify-content: space-between; align-items: center;
   padding: 0 10px;
   background: #fff;
   border-bottom: 2px solid #f1c40f; /* 黄色のアクセント */
 }
-.header_img { max-height: 35px; }
+
+.header_img {
+   max-height: 35px; 
+}
+
+/* ★修正ポイント1：HTMLの id="header-btn" と名前を完全に合わせる（#を使う） */
+#header-btn {
+  display: flex;
+  align-items: center;
+  gap: 15px; /* ボタン同士のスキマ */
+}
+
+/* ★修正ポイント2：ボタン自体を右に寄せる命令は不要なのでスッキリさせる */
+#mute-btn {
+  background: none;
+  border: none;
+  font-size: 24px; /* ⓘボタンのサイズ(26px)とバランスを合わせる */
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+}
+
+.info-icon-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #666;
+  padding: 5px;
+  display: flex;
+  align-items: center;
+}
+
 #menu-icon { background: none; border: none; font-size: 24px; color: #333; cursor: pointer;}
-#nav-menu { display: none; } /* 既存のJSで開閉する前提 */
+#nav-menu { display: none; }
 
 /* ===================================
    3. ゲームボード全体のレイアウト (Flexbox)
@@ -328,3 +361,33 @@ header {
   font-size: 0.9rem;
   display: block;
 }
+
+/* まるばつ */
+/* 正解・不正解の演出用オーバーレイ */
+#result-overlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10000; /* 一番手前に出す */
+  pointer-events: none; /* 下のボタン操作を邪魔しない */
+}
+
+#result-mark {
+  font-size: 300px; /* 超特大サイズ */
+  font-weight: bold;
+  filter: drop-shadow(0 0 20px rgba(255,255,255,0.5));
+  /* 動きのアニメーション */
+  animation: pop-mark 0.8s ease-out forwards;
+}
+
+/* ポップアップのアニメーション設定 */
+@keyframes pop-mark {
+  0% { transform: scale(0); opacity: 0; }
+  40% { transform: scale(1.2); opacity: 1; }
+  100% { transform: scale(1); opacity: 0; } /* 最後にスッと消える */
+}
+
+.hidden { display: none !important; }
