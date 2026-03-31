@@ -400,6 +400,7 @@ header {
 
 .modal-header {
   padding: 15px 20px;
+  height: 30px;
   background: #f1c40f;
   display: flex;
   justify-content: space-between;
@@ -427,7 +428,7 @@ header {
 }
 
 .content h2 {
-  font-size: 1.1rem;
+  font-size: 1rem;
   display: flex;
   align-items: center;
 }
@@ -438,4 +439,8 @@ header {
   height: 1.1rem;
   background: #f1c40f;
   margin-right: 8px;
+}
+
+#history-c{
+  padding-left: 85px;
 }
