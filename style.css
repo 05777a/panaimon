@@ -452,12 +452,28 @@ header {
   padding-left: 85px;
 }
 
-
-
-
 /* もし input-container の中身（テキストボックス）がはみ出す場合 */
 #input-container input, #input-container textarea {
   width: 100%;
   max-width: 100%;
   box-sizing: border-box;
+}
+
+/* --- 【追加】スマホなど横幅が狭い時（600px以下）の設定 --- */
+@media screen and (max-width: 600px) {
+  #hint-area {
+    flex-direction: column;  /* 縦並びに変更 */
+    align-items: flex-start; /* 左寄せにする */
+    gap: 8px;                /* ボタンとテキストの隙間 */
+  }
+
+  .hint-btn {
+    width: 100%;             /* ボタンを横いっぱいに広げる */
+    min-width: 0;            /* 固定幅を解除して枠内に収める */
+    padding: 10px;           /* 押しやすく少し大きく */
+  }
+
+  #hint-content {
+    width: 100%;             /* テキストエリアも横いっぱいに */
+  }
 }
