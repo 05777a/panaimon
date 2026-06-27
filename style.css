@@ -477,3 +477,23 @@ header {
     width: 100%;             /* テキストエリアも横いっぱいに */
   }
 }
+/* ===================================
+   履歴モーダルのスクロール完全修正
+=================================== */
+#history-modal .modal-content {
+  display: flex;
+  flex-direction: column;
+}
+
+/* 履歴を包む親要素をモーダルの高さにフィットさせてスクロールさせる */
+#history-body {
+  flex: 1;
+  min-height: 0;        /* Flexbox内のバグを防ぎ、高さを制限する */
+  overflow-y: auto;     /* 縦方向のスクロールバーを有効化 */
+}
+
+/* 実際に文字が入るエリアの余白調整 */
+#history {
+  padding: 20px;
+  box-sizing: border-box;
+}
