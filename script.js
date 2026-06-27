@@ -1,6 +1,7 @@
 // --- 初期設定 ---
 document.getElementById("thumbnail").src = "white.jpg";
 
+
 // 動画IDとタイトルのデータ
 const videos = [
   {videoId: '2rbjxB9VLMo', title: '【32章】あの一人ぼっちの男の子のために【今から崩壊3rd】', publishedAt: '2026-06-27'},
