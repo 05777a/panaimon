@@ -478,7 +478,7 @@ header {
   }
 
   .status-bar {
-    padding-bottom: 8rem; /* スマホのときだけ広くする数値 */
+    padding-bottom: 6rem; /* スマホのときだけ広くする数値 */
   }
 
 }
