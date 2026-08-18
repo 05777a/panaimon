@@ -476,6 +476,11 @@ header {
   #hint-content {
     width: 100%;             /* テキストエリアも横いっぱいに */
   }
+
+  .status-bar {
+    padding-bottom: 8rem; /* スマホのときだけ広くする数値 */
+  }
+
 }
 /* ===================================
    履歴モーダルのスクロール完全修正
@@ -496,4 +501,48 @@ header {
 #history {
   padding: 20px;
   box-sizing: border-box;
+}
+
+/* ===================================
+   ランキング　リザルト画面：名前入力・登録ボタン専用クラス
+=================================== */
+.result-form-group {
+  display: flex;
+  gap: 8px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* 名前入力テキストボックス */
+.result-input {
+  flex: 1;
+  min-width: 0;
+  height: 42px;
+  padding: 0 12px;
+  font-size: 15px;
+  font-family: inherit;
+  background: #fffde8;
+  color: #333;
+  border: 2px solid #f1c40f;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+/* 登録ボタン */
+.result-submit-btn {
+  flex: 0 0 80px;
+  height: 42px;
+  background: #27ae60;
+  color: #fff;
+  font-size: 14px;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  white-space: nowrap;
+  box-shadow: 0 4px rgba(0, 0, 0, 0.1);
+}
+
+.result-submit-btn:active {
+  transform: translateY(2px);
 }
